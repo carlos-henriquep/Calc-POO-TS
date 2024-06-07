@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/carlos-henriquep/Calc-POO-TS#readme",
   "devDependencies": {
+    "@types/node": "^20.14.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {

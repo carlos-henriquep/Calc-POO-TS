@@ -25,25 +25,84 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Calculator_1 = require("./src/Classe/Calculator");
 const readline = __importStar(require("readline"));
+var Operation;
+(function (Operation) {
+    Operation[Operation["Soma"] = 1] = "Soma";
+    Operation[Operation["Subtracao"] = 2] = "Subtracao";
+    Operation[Operation["Multiplicacao"] = 3] = "Multiplicacao";
+    Operation[Operation["Divisao"] = 4] = "Divisao";
+    Operation[Operation["Sair"] = 5] = "Sair";
+})(Operation || (Operation = {}));
 const calculadora = new Calculator_1.Calculator();
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
 });
-rl.question('Digite o primeiro número: ', (firstNumberString) => {
-    const firstNumber = Number(firstNumberString);
-    rl.question('Digite o segundo número: ', (secondNumberString) => {
-        const secondNumber = Number(secondNumberString);
-        calculadora.setNumA(firstNumber);
-        calculadora.setNumB(secondNumber);
-        const soma = calculadora.sum();
-        const subtração = calculadora.subtraction();
-        const multiplição = calculadora.multiplication();
-        const divisão = calculadora.division();
-        console.log(`O resultado da soma é: ${subtração}`);
-        console.log(`O resultado da substração é: ${subtração}`);
-        console.log(`O resultado da multiplição é: ${multiplição}`);
-        console.log(`O resultado da divisão é: ${divisão}`);
-        rl.close();
+console.clear();
+console.log("Bem-vindo à Calculadora!");
+function askForOperation() {
+    console.log(`
+  Escolha uma operação:
+  1. Soma
+  2. Subtração
+  3. Multiplicação
+  4. Divisão
+  5. Sair
+   `);
+    rl.question("Digite o número da operação: ", (op) => {
+        const operation = parseInt(op);
+        console.clear();
+        if (operation === Operation.Sair) {
+            console.clear();
+            console.log("Finalizando calculadora...");
+            rl.close();
+            return;
+        }
+        if (!Object.values(Operation).includes(operation)) {
+            console.log("Operação inválida. Tente novamente.");
+            askForOperation();
+            return;
+        }
+        rl.question("Digite o primeiro número: ", (firstNumberString) => {
+            const firstNumber = Number(firstNumberString);
+            rl.question("Digite o segundo número: ", (secondNumberString) => {
+                const secondNumber = Number(secondNumberString);
+                calculadora.setNumA(firstNumber);
+                calculadora.setNumB(secondNumber);
+                console.clear();
+                let result;
+                let operationName;
+                try {
+                    switch (operation) {
+                        case Operation.Soma:
+                            result = calculadora.sum();
+                            operationName = "Soma";
+                            break;
+                        case Operation.Subtracao:
+                            result = calculadora.subtraction();
+                            operationName = "Subtração";
+                            break;
+                        case Operation.Multiplicacao:
+                            result = calculadora.multiplication();
+                            operationName = "Multiplicação";
+                            break;
+                        case Operation.Divisao:
+                            result = calculadora.division();
+                            operationName = "Divisão";
+                            break;
+                        default:
+                            console.log("Operação inválida");
+                            askForOperation();
+                            return;
+                    }
+                    console.log(`O resultado da ${operationName} é: ${result}`);
+                }
+                catch (error) {
+                    console.log(error.message);
+                }
+                askForOperation();
+            });
+        });
     });
-});
+}
+askForOperation();
